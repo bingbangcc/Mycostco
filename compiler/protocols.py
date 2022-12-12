@@ -6,19 +6,26 @@ from collections import defaultdict
 from enum import Enum
 from typing import Dict, List, Optional
 
-
+# 成本的类型
 class CostType(Enum):
+    # 运行时间
     RT = "RT"
+    # 峰值内存消耗
     MEM = "MEM"
+    # ？？论文里第三种应该是网络通信
+    # 从cost.yml来看这里RT_MEM_PRESSURE是RT和MEM的乘积
     RT_MEM_PRESSURE = "RT_MEM_PRESSURE"
 
-
+# CostTotals是继承自dict类，即其本质就是一个dict
 class CostTotals(dict):
     def __init__(self):
+        # super是调用父类dict的__init__函数
         super(CostTotals, self).__init__()
+        # 将三种类型的成本都初始化为0，这里用一个dict来记录每种cost
         for ct in CostType:
             self[ct] = 0
 
+    # 返回一个CostTotals对象
     def copy(self):
         ret = CostTotals()
         for ct in CostType:
@@ -27,6 +34,7 @@ class CostTotals(dict):
 
     def __mul__(self, other):
         ret = self.copy()
+        # 这里 *= 会调用下面啊的__imul__方法，并根据other的类型进行不同的乘法操作
         ret *= other
         return ret
 
@@ -35,6 +43,7 @@ class CostTotals(dict):
             for ct, c in other.items():
                 self[ct] *= c
         elif isinstance(other, (int, float)):
+            # 这里self是一个dict，则for ct in self就是遍历dict的key
             for ct in self:
                 self[ct] *= other
         else:
@@ -89,8 +98,13 @@ class Circuit:
     def __repr__(self):
         return self.__class__.__name__
 
+    # 输出一个电路circuit的cost
     def get_cost(self, gates: Dict[str, int], total: CostTotals):
+        # 遍历该circuit的门的种类及数量
         for g, c in gates.items():
+            # 遍历三种cost类型
+            # 这里costs是两层dict，第一层是门类型，第二层是cost类型
+            # 这里记录整个circuit的代价也是用门的cost乘以门的数量，和HyCC是一样的啊？？？目前没看懂
             for ct in self.costs[g]:
                 total[ct] += self.costs[g][ct] * c
         #return total # + self.costs[self.B]

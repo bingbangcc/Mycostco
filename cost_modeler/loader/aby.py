@@ -2,7 +2,8 @@ import glob
 
 import pandas as pd
 
-from loader.loader import FilesLoader
+# from loader.loader import FilesLoader
+from loader import FilesLoader
 
 
 class ABYLoader(FilesLoader):

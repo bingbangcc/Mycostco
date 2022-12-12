@@ -3,7 +3,8 @@ import glob
 import pandas as pd
 import numpy as np
 
-from loader.loader import FilesLoader
+# from loader.loader import FilesLoader
+from loader import FilesLoader
 
 class AgMpcLoader(FilesLoader):
     def read_csv(self, f: str) -> pd.DataFrame:
