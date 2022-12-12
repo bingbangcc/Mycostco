@@ -107,7 +107,8 @@ class Circuit:
             # 这里记录整个circuit的代价也是用门的cost乘以门的数量，和HyCC是一样的啊？？？目前没看懂
             for ct in self.costs[g]:
                 total[ct] += self.costs[g][ct] * c
-        #return total # + self.costs[self.B]
+        # 返回total_cost，这个self.costs[self.B]不知道是啥
+        return total # + self.costs[self.B]
 
     def get_input_cost(self, n: int, total: CostTotals):
         return self.get_cost({self.INPUT: n}, total)
